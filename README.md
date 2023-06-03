@@ -1,2 +1,1 @@
-# my-doc-scanner
-MyDoc Scanner
+# MyDoc Scanner
