@@ -164,3 +164,6 @@ test-files/
 
 # Upload Directory
 uploads/
+
+# Out Directory
+files_out/

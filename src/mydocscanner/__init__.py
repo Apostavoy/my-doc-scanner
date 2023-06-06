@@ -13,9 +13,10 @@ from flask import Flask, request, jsonify
 from werkzeug.utils import secure_filename
 import uuid
 
+from pdfDoc import PDFDoc
+from config import UPLOAD_PATH
+
 serve = Flask("MyDoc Scanner Server")
-ROOT = '../../'
-UPLOAD_PATH = ROOT + 'uploads/pdf/'
 
 
 @serve.get("/")
@@ -40,6 +41,7 @@ def accept_PDF_upload():
                 'filename': set to the uploaded filename if the uploading succeeds
              }
     """
+
     def generate_filedata(fname):
         """
         Generate a unique secure filename for the uploaded file data and extract the file extension for the document.
@@ -50,6 +52,7 @@ def accept_PDF_upload():
         fData = secure_filename(fname)
         fDataSplit = fData.rsplit('.', 1)
         return fDataSplit[0] + '-' + str(uuid.uuid4()) + '.' + fDataSplit[1], fDataSplit[1]
+
     error = None
 
     if 'file' not in request.files:
@@ -70,7 +73,20 @@ def accept_PDF_upload():
     return {'uploaded': True, 'filename': f"{filename}"}, 200
 
 
+@serve.get("/pdf2image/<filename>")
+def convertPDFToImages(filename):
+    error = None
+
+    path = UPLOAD_PATH + filename
+    try:
+        with open(path, 'r'):
+            pass
+    except FileNotFoundError:
+        error = "File has not been uploaded."
+
+    pdf = PDFDoc(path, filename)
+    pdf.output_pages(compress=True)
+
+
 if __name__ == '__main__':
     serve.run(debug=True)
-
-

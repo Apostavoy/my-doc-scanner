@@ -18,16 +18,16 @@ class Page:
     """
     Page Class
 
-    data: JPEGImage Object
+    pageData: JPEGImage Object
     """
     def __init__(self, pageData):
         self.imgData = pageData
 
     def get(self):
-        return self.data
+        return self.imgData
 
-    def crop_img(self, x1, y1, x2, y2):
+    def crop_page(self, x1, y1, x2, y2):
         return Page(self.imgData.crop(x1, y1, x2, y2))
 
-    def read_img(self):
+    def extract_text(self):
         return PageText(pytesseract.image_to_string(self.imgData))
