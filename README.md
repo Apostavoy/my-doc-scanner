@@ -1,1 +1,0 @@
-# MyDoc Scanner
