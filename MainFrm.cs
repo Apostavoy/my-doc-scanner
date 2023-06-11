@@ -147,13 +147,20 @@ namespace windows_ui
 
             switch (mode) {
                 case Modes.Std:
-                    mainToolStrip.Enabled = true;
-                    cropModeBtn.Text = "Crop Mode";
+                    mainCropBtn.Checked = false;
                     break;
                 case Modes.Crp:
-                    mainToolStrip.Enabled = false;
-                    cropModeBtn.Text = "Complete Crop";
+                    mainCropBtn.Checked = true;
                     break;
+            }
+
+            setMainToolStripCrpMode();
+        }
+
+        private void setMainToolStripCrpMode() {
+            foreach (ToolStripButton tool in mainToolStrip.Items) {
+                if (tool.Name == mainCropBtn.Name) tool.Enabled = true;
+                else tool.Enabled = !(mode == Modes.Crp);
             }
         }
 
@@ -228,6 +235,5 @@ namespace windows_ui
         {
             setImageToFirstPage();
         }
-
     }
 }

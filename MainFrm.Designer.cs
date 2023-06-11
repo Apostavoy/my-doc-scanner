@@ -35,20 +35,26 @@ namespace windows_ui
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainFrm));
             this.mainToolStrip = new System.Windows.Forms.ToolStrip();
             this.mainOpenFile = new System.Windows.Forms.ToolStripButton();
             this.mainScanFile = new System.Windows.Forms.ToolStripButton();
+            this.RegexEditor = new System.Windows.Forms.ToolStripButton();
+            this.mainCropBtn = new System.Windows.Forms.ToolStripButton();
             this.mainPanel = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.cropModeBtn = new System.Windows.Forms.Button();
             this.mainCropBox = new System.Windows.Forms.PictureBox();
             this.sep1 = new System.Windows.Forms.Splitter();
             this.fileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.cropContext = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.cropSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cropColourToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cropWidthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mainToolStrip.SuspendLayout();
             this.mainPanel.SuspendLayout();
-            this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mainCropBox)).BeginInit();
+            this.cropContext.SuspendLayout();
             this.SuspendLayout();
             // 
             // mainToolStrip
@@ -62,7 +68,9 @@ namespace windows_ui
             this.mainToolStrip.ImageScalingSize = new System.Drawing.Size(30, 30);
             this.mainToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mainOpenFile,
-            this.mainScanFile});
+            this.mainScanFile,
+            this.RegexEditor,
+            this.mainCropBtn});
             this.mainToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.VerticalStackWithOverflow;
             this.mainToolStrip.Location = new System.Drawing.Point(0, 0);
             this.mainToolStrip.Name = "mainToolStrip";
@@ -97,6 +105,28 @@ namespace windows_ui
             this.mainScanFile.ToolTipText = "Scan File...";
             this.mainScanFile.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MainFrm_MouseUp);
             // 
+            // RegexEditor
+            // 
+            this.RegexEditor.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.RegexEditor.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.RegexEditor.Image = global::windows_ui.Properties.Resources.regex;
+            this.RegexEditor.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.RegexEditor.Name = "RegexEditor";
+            this.RegexEditor.Padding = new System.Windows.Forms.Padding(5);
+            this.RegexEditor.Size = new System.Drawing.Size(50, 44);
+            this.RegexEditor.ToolTipText = "Regex Editor...";
+            // 
+            // mainCropBtn
+            // 
+            this.mainCropBtn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.mainCropBtn.Image = global::windows_ui.Properties.Resources.crop;
+            this.mainCropBtn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.mainCropBtn.Name = "mainCropBtn";
+            this.mainCropBtn.Padding = new System.Windows.Forms.Padding(5);
+            this.mainCropBtn.Size = new System.Drawing.Size(50, 44);
+            this.mainCropBtn.ToolTipText = "Crop Mode";
+            this.mainCropBtn.Click += new System.EventHandler(this.cropModeBtn_Click);
+            // 
             // mainPanel
             // 
             this.mainPanel.Controls.Add(this.panel2);
@@ -114,22 +144,10 @@ namespace windows_ui
             // 
             this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.panel2.Controls.Add(this.cropModeBtn);
             this.panel2.Location = new System.Drawing.Point(58, 12);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(266, 356);
             this.panel2.TabIndex = 4;
-            // 
-            // cropModeBtn
-            // 
-            this.cropModeBtn.Location = new System.Drawing.Point(3, 3);
-            this.cropModeBtn.Name = "cropModeBtn";
-            this.cropModeBtn.Size = new System.Drawing.Size(260, 23);
-            this.cropModeBtn.TabIndex = 3;
-            this.cropModeBtn.Text = "Crop Mode";
-            this.cropModeBtn.UseVisualStyleBackColor = true;
-            this.cropModeBtn.Click += new System.EventHandler(this.cropModeBtn_Click);
-            this.cropModeBtn.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MainFrm_MouseUp);
             // 
             // mainCropBox
             // 
@@ -137,6 +155,7 @@ namespace windows_ui
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.mainCropBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.mainCropBox.ContextMenuStrip = this.cropContext;
             this.mainCropBox.Location = new System.Drawing.Point(330, 12);
             this.mainCropBox.Name = "mainCropBox";
             this.mainCropBox.Size = new System.Drawing.Size(431, 357);
@@ -160,6 +179,35 @@ namespace windows_ui
             // 
             this.fileDialog.Filter = "PDF Files (*.pdf)|*.pdf";
             // 
+            // cropContext
+            // 
+            this.cropContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cropSettingsToolStripMenuItem});
+            this.cropContext.Name = "cropContext";
+            this.cropContext.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.cropContext.Size = new System.Drawing.Size(181, 48);
+            // 
+            // cropSettingsToolStripMenuItem
+            // 
+            this.cropSettingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.cropColourToolStripMenuItem,
+            this.cropWidthToolStripMenuItem});
+            this.cropSettingsToolStripMenuItem.Name = "cropSettingsToolStripMenuItem";
+            this.cropSettingsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cropSettingsToolStripMenuItem.Text = "Crop Settings";
+            // 
+            // cropColourToolStripMenuItem
+            // 
+            this.cropColourToolStripMenuItem.Name = "cropColourToolStripMenuItem";
+            this.cropColourToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cropColourToolStripMenuItem.Text = "Crop Colour";
+            // 
+            // cropWidthToolStripMenuItem
+            // 
+            this.cropWidthToolStripMenuItem.Name = "cropWidthToolStripMenuItem";
+            this.cropWidthToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cropWidthToolStripMenuItem.Text = "Crop Width";
+            // 
             // MainFrm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -174,8 +222,8 @@ namespace windows_ui
             this.mainToolStrip.ResumeLayout(false);
             this.mainToolStrip.PerformLayout();
             this.mainPanel.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.mainCropBox)).EndInit();
+            this.cropContext.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -189,7 +237,12 @@ namespace windows_ui
         private Splitter sep1;
         private PictureBox mainCropBox;
         private OpenFileDialog fileDialog;
-        private Button cropModeBtn;
         private Panel panel2;
+        private ToolStripButton RegexEditor;
+        private ToolStripButton mainCropBtn;
+        private ContextMenuStrip cropContext;
+        private ToolStripMenuItem cropSettingsToolStripMenuItem;
+        private ToolStripMenuItem cropColourToolStripMenuItem;
+        private ToolStripMenuItem cropWidthToolStripMenuItem;
     }
 }

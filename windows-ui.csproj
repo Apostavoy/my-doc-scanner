@@ -159,6 +159,12 @@
   <ItemGroup>
     <None Include="Resources\OpenFile.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\regex.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\crop.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\IronPdf.Native.Chrome.Windows.2023.6.14948\build\net\IronPdf.Native.Chrome.Windows.targets" Condition="Exists('packages\IronPdf.Native.Chrome.Windows.2023.6.14948\build\net\IronPdf.Native.Chrome.Windows.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
