@@ -1,24 +1,45 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.Tracing;
+using System.Configuration;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 using System.Windows.Controls;
-using System.Windows.Forms;
-using System.Windows.Media.TextFormatting;
 using IronPdf;
 using IronSoftware.Drawing;
-using Microsoft.Win32;
-using SixLabors.ImageSharp.Processing;
 
 namespace windows_ui
 {
     internal class PDF
     {
+        internal struct Scaling {
+            public decimal scalingPercentage { get; set; }
+            private int maxWidth, maxHeight;
+            private AnyBitmap page;
+            public Scaling(AnyBitmap p, int maxWidth, int maxHeight)
+            {
+                this.maxWidth = maxWidth;
+                this.maxHeight = maxHeight;
+
+                if (p.Width >= p.Height) {
+                    this.scalingPercentage = Decimal.Divide(this.maxWidth, p.Width);
+                    if ((p.Height * this.scalingPercentage) > this.maxHeight) {
+                        this.scalingPercentage = Decimal.Divide(this.maxHeight, p.Height);
+                    }
+                } else {
+                    this.scalingPercentage = Decimal.Divide(this.maxHeight, p.Height);
+                    if ((p.Width * this.scalingPercentage) > this.maxWidth) {
+                        this.scalingPercentage = Decimal.Divide(this.maxWidth, p.Width);
+                    }
+                }
+                this.page = p;
+            }
+
+            public (int width, int height) scaleWH()
+            {
+                return ((int)(this.page.Width * this.scalingPercentage), (int)(this.page.Height * this.scalingPercentage));
+            }
+        }
+
         private AnyBitmap[] pages;
 
         public PDF(string filePath)
@@ -26,23 +47,23 @@ namespace windows_ui
             this.Load(filePath);
         }
 
-        public AnyBitmap getPage(int index, int maxWidth=-1, int maxHeight=-1)
+        public (AnyBitmap, decimal) getPage(int index, int maxWidth=-1, int maxHeight=-1, Action<int, int> resizingCallback = null)
         {
-            if (pages == null) { throw new InvalidOperationException(); }
-            if (maxHeight <= 0 && maxWidth <= 0) { return pages[index]; }
-            return this.resizePage(pages[index], maxWidth, maxHeight);
+            if (pages == null) throw new InvalidOperationException();
+
+            AnyBitmap page = pages[index];
+            
+            if (maxHeight <= 0 && maxWidth <= 0) { return (page, 1); }
+            if (resizingCallback == null) throw new InvalidOperationException();
+            Scaling scaling = new Scaling(page, maxWidth, maxHeight);
+            return (this.resizePage(page, scaling, resizingCallback), scaling.scalingPercentage);
         }
 
-        private AnyBitmap resizePage(AnyBitmap page, int maxWidth, int maxHeight)
+        private AnyBitmap resizePage(AnyBitmap page, Scaling scaling, Action<int, int> callback)
         {
-            decimal determineScaling(AnyBitmap p, int mW, int mH) {
-                if (p.Width >= p.Height) return Decimal.Divide(mW, page.Width);
-                return Decimal.Divide(mH, page.Height);
-            }
+            (int newWidth, int newHeight) = scaling.scaleWH();
 
-            decimal scaling = determineScaling(page, maxWidth, maxHeight);
-
-            Bitmap bitmap = new Bitmap((int)(scaling * page.Width), (int)(scaling * page.Height), System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            Bitmap bitmap = new Bitmap(newWidth, newHeight, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
 
             bitmap.SetResolution((float)page.HorizontalResolution, (float)page.VerticalResolution);
 
@@ -53,13 +74,14 @@ namespace windows_ui
                 new Rectangle(
                     0, 
                     0, 
-                    (int)(scaling * page.Width), 
-                    (int)(scaling * page.Height)
+                    newWidth, 
+                    newHeight
                 )
             );
 
             bitmapDrawable.Dispose();
 
+            callback(newWidth, newHeight);
             return bitmap;
         }
 

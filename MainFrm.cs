@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IronSoftware.Drawing;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
 using Color = System.Drawing.Color;
@@ -7,56 +8,76 @@ namespace windows_ui
 {
     struct CropData
     {
-        public int x;
-        public int y;
-        public int width;
-        public int height;
-        public Pen pen;
-        public int changesSinceCheck;
+        private int x1;
+        private int y1;
+        private int x2;
+        private int y2;
+        private decimal scaling;
+        private int changesSinceCheck;
 
         public CropData(int init)
         {
-            this.x = init;
-            this.y = init;
-            this.width = init;
-            this.height = init;
-
-            this.pen = new Pen(Color.Red, 1);
-            this.pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
-
+            this.x1 = init;
+            this.y1 = init;
+            this.x2 = init;
+            this.y2 = init;
+            this.scaling = init;
             this.changesSinceCheck = init;
         }
 
-        public void setX(int x)
+        public void setX1(int x)
         {
-            this.x = x;
+            this.x1 = x;
             this.changesSinceCheck++;
         }
 
-        public void setY(int y)
+        public void setY1(int y)
         {
-            this.y = y;
+            this.y1 = y;
             this.changesSinceCheck++;
         }
 
-        public void setXY(int x, int y) { 
-            setX(x); setY(y);
+        public void setXY1(int x, int y) { 
+            setX1(x); setY1(y);
         }
 
-        public void setWidth(int width)
+
+        public void setX2(int x)
         {
-            this.width = width;
+            this.x2 = x;
             this.changesSinceCheck++;
         }
 
-        public void setHeight(int height)
+        public void setY2(int y)
         {
-            this.height = height;
+            this.y2 = y;
             this.changesSinceCheck++;
         }
 
-        public void setDim(int x2, int y2) { 
-            setWidth(x2 - this.x); setHeight(y2 - this.y);
+        public void setXY2(int x, int y)
+        {
+            setX2(x); setY2(y);
+        }
+
+        public void setScaling(decimal scaling) { 
+            this.scaling = scaling;
+        }
+
+        public void scaleVals(decimal scaling=-1) {
+            if (scaling < 0) scaling = this.scaling;
+
+            setXY1((int)(scaling * this.x1), (int)(scaling * this.y1));
+            setXY2((int)(scaling * this.x2), (int)(scaling * this.y2));
+        }
+
+        public void drawCropRect(Control canvas, Pen pen) {
+            canvas.CreateGraphics().DrawRectangle(
+                        pen,
+                        this.x1 > this.x2 ? this.x2 : this.x1,
+                        this.y1 > this.y2 ? this.y2 : this.y1,
+                        this.x1 > this.x2 ? this.x1 - this.x2 : this.x2 - this.x1,
+                        this.y1 > this.y2 ? this.y1 - this.y2 : this.y2 - this.y1
+                    );
         }
 
         public bool changed()
@@ -99,11 +120,15 @@ namespace windows_ui
         private void setImageToFirstPage() {
             if (openPDF != null)
             {
-                this.mainCropBox.Image = openPDF.getPage(
+                (AnyBitmap image, decimal scaling) = openPDF.getPage(
                         0,
-                        this.mainCropBox.Width,
-                        this.mainCropBox.Height
-                );
+                        this.mainPanel.Width - 342,
+                        this.mainPanel.Height - 24,
+                        resizeCropBoxOnImageResize
+                ) ;
+
+                this.mainCropBox.Image = image;
+                this.cropData.setScaling(scaling);
             }        
         }
 
@@ -153,12 +178,22 @@ namespace windows_ui
             }
         }
 
+        private void resizeCropBoxOnImageResize(int width, int height)
+        {
+            mainCropBox.Width = width; mainCropBox.Height = height;
+            refreshCropBox();
+            cropData.scaleVals();
+            using (Pen pen = new Pen(Color.Black, 2)) {
+                cropData.drawCropRect(mainCropBox, pen);
+            }
+        }
+
         private void mainCropBox_MouseDown(object sender, MouseEventArgs e)
         {
             if (this.isValidCrop(e.Button))
             {
                 Cursor = Cursors.Cross;
-                cropData.setXY(e.X, e.Y);
+                cropData.setXY1(e.X, e.Y);
                 refreshCropBox();
             }
             
@@ -166,17 +201,13 @@ namespace windows_ui
 
         private void mainCropBox_MouseMove(object sender, MouseEventArgs e)
         {
-            if (this.isValidCrop(e.Button))
-            {
-                refreshCropBox();
-                cropData.setDim(e.X, e.Y);
-                mainCropBox.CreateGraphics().DrawRectangle(
-                    cropData.pen, 
-                    cropData.x,
-                    cropData.y, 
-                    cropData.width, 
-                    cropData.height
-                );
+            using (Pen cropPen = new Pen(Color.Black, 2)) {
+                if (this.isValidCrop(e.Button)) {
+                    cropPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+                    refreshCropBox();
+                    cropData.setXY2(e.X, e.Y);
+                    cropData.drawCropRect(mainCropBox, cropPen);
+                }
             }
         }
 

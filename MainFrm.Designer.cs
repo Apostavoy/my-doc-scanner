@@ -39,14 +39,14 @@ namespace windows_ui
             this.mainToolStrip = new System.Windows.Forms.ToolStrip();
             this.mainOpenFile = new System.Windows.Forms.ToolStripButton();
             this.mainScanFile = new System.Windows.Forms.ToolStripButton();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.mainPanel = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.cropModeBtn = new System.Windows.Forms.Button();
             this.mainCropBox = new System.Windows.Forms.PictureBox();
             this.sep1 = new System.Windows.Forms.Splitter();
             this.fileDialog = new System.Windows.Forms.OpenFileDialog();
             this.mainToolStrip.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.mainPanel.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mainCropBox)).BeginInit();
             this.SuspendLayout();
@@ -97,18 +97,18 @@ namespace windows_ui
             this.mainScanFile.ToolTipText = "Scan File...";
             this.mainScanFile.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MainFrm_MouseUp);
             // 
-            // panel1
+            // mainPanel
             // 
-            this.panel1.Controls.Add(this.panel2);
-            this.panel1.Controls.Add(this.mainCropBox);
-            this.panel1.Controls.Add(this.sep1);
-            this.panel1.Controls.Add(this.mainToolStrip);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(616, 380);
-            this.panel1.TabIndex = 1;
-            this.panel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MainFrm_MouseUp);
+            this.mainPanel.Controls.Add(this.panel2);
+            this.mainPanel.Controls.Add(this.mainCropBox);
+            this.mainPanel.Controls.Add(this.sep1);
+            this.mainPanel.Controls.Add(this.mainToolStrip);
+            this.mainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.mainPanel.Location = new System.Drawing.Point(0, 0);
+            this.mainPanel.Name = "mainPanel";
+            this.mainPanel.Size = new System.Drawing.Size(773, 380);
+            this.mainPanel.TabIndex = 1;
+            this.mainPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MainFrm_MouseUp);
             // 
             // panel2
             // 
@@ -139,7 +139,7 @@ namespace windows_ui
             this.mainCropBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.mainCropBox.Location = new System.Drawing.Point(330, 12);
             this.mainCropBox.Name = "mainCropBox";
-            this.mainCropBox.Size = new System.Drawing.Size(274, 357);
+            this.mainCropBox.Size = new System.Drawing.Size(431, 357);
             this.mainCropBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.mainCropBox.TabIndex = 1;
             this.mainCropBox.TabStop = false;
@@ -164,16 +164,16 @@ namespace windows_ui
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(616, 380);
-            this.Controls.Add(this.panel1);
+            this.ClientSize = new System.Drawing.Size(773, 380);
+            this.Controls.Add(this.mainPanel);
             this.Name = "MainFrm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "MainFrm";
+            this.Text = "MyDoc Scanner";
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MainFrm_MouseUp);
             this.Resize += new System.EventHandler(this.MainFrm_Resize);
             this.mainToolStrip.ResumeLayout(false);
             this.mainToolStrip.PerformLayout();
-            this.panel1.ResumeLayout(false);
+            this.mainPanel.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.mainCropBox)).EndInit();
             this.ResumeLayout(false);
@@ -185,7 +185,7 @@ namespace windows_ui
         private System.Windows.Forms.ToolStrip mainToolStrip;
         private ToolStripButton mainScanFile;
         private ToolStripButton mainOpenFile;
-        private Panel panel1;
+        private Panel mainPanel;
         private Splitter sep1;
         private PictureBox mainCropBox;
         private OpenFileDialog fileDialog;
