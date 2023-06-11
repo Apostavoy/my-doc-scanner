@@ -47,19 +47,19 @@ namespace windows_ui
             this.Load(filePath);
         }
 
-        public (AnyBitmap, decimal) getPage(int index, int maxWidth=-1, int maxHeight=-1, Action<int, int> resizingCallback = null)
+        public AnyBitmap getPage(int index, int maxWidth=-1, int maxHeight=-1, Action<AnyBitmap, int, int> resizingCallback = null)
         {
             if (pages == null) throw new InvalidOperationException();
 
             AnyBitmap page = pages[index];
             
-            if (maxHeight <= 0 && maxWidth <= 0) { return (page, 1); }
+            if (maxHeight <= 0 && maxWidth <= 0) return page; 
             if (resizingCallback == null) throw new InvalidOperationException();
             Scaling scaling = new Scaling(page, maxWidth, maxHeight);
-            return (this.resizePage(page, scaling, resizingCallback), scaling.scalingPercentage);
+            return this.resizePage(page, scaling, resizingCallback);
         }
 
-        private AnyBitmap resizePage(AnyBitmap page, Scaling scaling, Action<int, int> callback)
+        private AnyBitmap resizePage(AnyBitmap page, Scaling scaling, Action<AnyBitmap, int, int> callback)
         {
             (int newWidth, int newHeight) = scaling.scaleWH();
 
@@ -81,7 +81,7 @@ namespace windows_ui
 
             bitmapDrawable.Dispose();
 
-            callback(newWidth, newHeight);
+            callback(bitmap, newWidth, newHeight);
             return bitmap;
         }
 

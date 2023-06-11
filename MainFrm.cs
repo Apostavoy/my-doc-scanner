@@ -12,17 +12,16 @@ namespace windows_ui
         private int y1;
         private int x2;
         private int y2;
-        private decimal scaling;
+
         private int changesSinceCheck;
 
-        public CropData(int init)
+        public CropData(int init=-1)
         {
             this.x1 = init;
             this.y1 = init;
             this.x2 = init;
             this.y2 = init;
-            this.scaling = init;
-            this.changesSinceCheck = init;
+            this.changesSinceCheck = 0;
         }
 
         public void setX1(int x)
@@ -41,7 +40,6 @@ namespace windows_ui
             setX1(x); setY1(y);
         }
 
-
         public void setX2(int x)
         {
             this.x2 = x;
@@ -59,15 +57,8 @@ namespace windows_ui
             setX2(x); setY2(y);
         }
 
-        public void setScaling(decimal scaling) { 
-            this.scaling = scaling;
-        }
-
-        public void scaleVals(decimal scaling=-1) {
-            if (scaling < 0) scaling = this.scaling;
-
-            setXY1((int)(scaling * this.x1), (int)(scaling * this.y1));
-            setXY2((int)(scaling * this.x2), (int)(scaling * this.y2));
+        public bool isValid() { 
+            return x1 >= 0 && x2 >= 0 && y1 >= 0 && y2 >= 0;
         }
 
         public void drawCropRect(Control canvas, Pen pen) {
@@ -86,6 +77,12 @@ namespace windows_ui
             this.changesSinceCheck = 0;
             return isChanged;
         }
+
+        internal void reset()
+        {
+            setXY1(-1, -1);
+            setXY2(-1, -1);
+        }
     }
 
 
@@ -97,12 +94,16 @@ namespace windows_ui
         }
 
         Modes mode = Modes.Std;
-        CropData cropData = new CropData(0);
+        CropData cropData = new CropData();
         PDF openPDF = null;
+
+        (int, int) currentCropBoxSize;
 
         public MainFrm()
         {
             InitializeComponent();
+
+            currentCropBoxSize = (this.mainCropBox.Width, this.mainCropBox.Height);
         }
 
         private void mainOpenFile_Click(object sender, EventArgs e)
@@ -120,15 +121,12 @@ namespace windows_ui
         private void setImageToFirstPage() {
             if (openPDF != null)
             {
-                (AnyBitmap image, decimal scaling) = openPDF.getPage(
+                openPDF.getPage(
                         0,
                         this.mainPanel.Width - 342,
                         this.mainPanel.Height - 24,
-                        resizeCropBoxOnImageResize
-                ) ;
-
-                this.mainCropBox.Image = image;
-                this.cropData.setScaling(scaling);
+                        setNewImage
+                );
             }        
         }
 
@@ -178,14 +176,24 @@ namespace windows_ui
             }
         }
 
-        private void resizeCropBoxOnImageResize(int width, int height)
+        private void setNewImage(AnyBitmap page, int width, int height)
         {
             mainCropBox.Width = width; mainCropBox.Height = height;
-            refreshCropBox();
-            cropData.scaleVals();
-            using (Pen pen = new Pen(Color.Black, 2)) {
-                cropData.drawCropRect(mainCropBox, pen);
+            
+            this.mainCropBox.Image = page;
+            if ((mainCropBox.Width, mainCropBox.Height) == currentCropBoxSize)
+            {
+                refreshCropBox();
+                using (Pen pen = new Pen(Color.Black, 2))
+                {
+                    pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+                    cropData.drawCropRect(mainCropBox, pen);
+                }
+            } else {
+                cropData.reset();
             }
+
+            currentCropBoxSize = (mainCropBox.Width, mainCropBox.Height);
         }
 
         private void mainCropBox_MouseDown(object sender, MouseEventArgs e)
@@ -220,5 +228,6 @@ namespace windows_ui
         {
             setImageToFirstPage();
         }
+
     }
 }
