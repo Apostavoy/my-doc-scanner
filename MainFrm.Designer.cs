@@ -43,14 +43,14 @@ namespace windows_ui
             this.RegexEditor = new System.Windows.Forms.ToolStripButton();
             this.mainCropBtn = new System.Windows.Forms.ToolStripButton();
             this.mainPanel = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
             this.mainCropBox = new System.Windows.Forms.PictureBox();
-            this.sep1 = new System.Windows.Forms.Splitter();
-            this.fileDialog = new System.Windows.Forms.OpenFileDialog();
             this.cropContext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.cropSettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cropColourToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cropWidthToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sep1 = new System.Windows.Forms.Splitter();
+            this.fileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.cropBoxPanel = new System.Windows.Forms.Panel();
             this.mainToolStrip.SuspendLayout();
             this.mainPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mainCropBox)).BeginInit();
@@ -76,7 +76,7 @@ namespace windows_ui
             this.mainToolStrip.Name = "mainToolStrip";
             this.mainToolStrip.Padding = new System.Windows.Forms.Padding(0);
             this.mainToolStrip.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.mainToolStrip.Size = new System.Drawing.Size(51, 380);
+            this.mainToolStrip.Size = new System.Drawing.Size(51, 456);
             this.mainToolStrip.Stretch = true;
             this.mainToolStrip.TabIndex = 0;
             this.mainToolStrip.Text = "toolStrip1";
@@ -129,25 +129,16 @@ namespace windows_ui
             // 
             // mainPanel
             // 
-            this.mainPanel.Controls.Add(this.panel2);
             this.mainPanel.Controls.Add(this.mainCropBox);
+            this.mainPanel.Controls.Add(this.cropBoxPanel);
             this.mainPanel.Controls.Add(this.sep1);
             this.mainPanel.Controls.Add(this.mainToolStrip);
             this.mainPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainPanel.Location = new System.Drawing.Point(0, 0);
             this.mainPanel.Name = "mainPanel";
-            this.mainPanel.Size = new System.Drawing.Size(773, 380);
+            this.mainPanel.Size = new System.Drawing.Size(926, 456);
             this.mainPanel.TabIndex = 1;
             this.mainPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MainFrm_MouseUp);
-            // 
-            // panel2
-            // 
-            this.panel2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.panel2.Location = new System.Drawing.Point(58, 12);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(266, 356);
-            this.panel2.TabIndex = 4;
             // 
             // mainCropBox
             // 
@@ -156,9 +147,9 @@ namespace windows_ui
             | System.Windows.Forms.AnchorStyles.Right)));
             this.mainCropBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.mainCropBox.ContextMenuStrip = this.cropContext;
-            this.mainCropBox.Location = new System.Drawing.Point(330, 12);
+            this.mainCropBox.Location = new System.Drawing.Point(63, 12);
             this.mainCropBox.Name = "mainCropBox";
-            this.mainCropBox.Size = new System.Drawing.Size(431, 357);
+            this.mainCropBox.Size = new System.Drawing.Size(851, 432);
             this.mainCropBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.mainCropBox.TabIndex = 1;
             this.mainCropBox.TabStop = false;
@@ -166,26 +157,13 @@ namespace windows_ui
             this.mainCropBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.mainCropBox_MouseMove);
             this.mainCropBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MainFrm_MouseUp);
             // 
-            // sep1
-            // 
-            this.sep1.BackColor = System.Drawing.SystemColors.AppWorkspace;
-            this.sep1.Location = new System.Drawing.Point(51, 0);
-            this.sep1.Name = "sep1";
-            this.sep1.Size = new System.Drawing.Size(1, 380);
-            this.sep1.TabIndex = 2;
-            this.sep1.TabStop = false;
-            // 
-            // fileDialog
-            // 
-            this.fileDialog.Filter = "PDF Files (*.pdf)|*.pdf";
-            // 
             // cropContext
             // 
             this.cropContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cropSettingsToolStripMenuItem});
             this.cropContext.Name = "cropContext";
             this.cropContext.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.cropContext.Size = new System.Drawing.Size(181, 48);
+            this.cropContext.Size = new System.Drawing.Size(146, 26);
             // 
             // cropSettingsToolStripMenuItem
             // 
@@ -193,26 +171,50 @@ namespace windows_ui
             this.cropColourToolStripMenuItem,
             this.cropWidthToolStripMenuItem});
             this.cropSettingsToolStripMenuItem.Name = "cropSettingsToolStripMenuItem";
-            this.cropSettingsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cropSettingsToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
             this.cropSettingsToolStripMenuItem.Text = "Crop Settings";
             // 
             // cropColourToolStripMenuItem
             // 
             this.cropColourToolStripMenuItem.Name = "cropColourToolStripMenuItem";
-            this.cropColourToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cropColourToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.cropColourToolStripMenuItem.Text = "Crop Colour";
             // 
             // cropWidthToolStripMenuItem
             // 
             this.cropWidthToolStripMenuItem.Name = "cropWidthToolStripMenuItem";
-            this.cropWidthToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cropWidthToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
             this.cropWidthToolStripMenuItem.Text = "Crop Width";
+            // 
+            // sep1
+            // 
+            this.sep1.BackColor = System.Drawing.SystemColors.AppWorkspace;
+            this.sep1.Location = new System.Drawing.Point(51, 0);
+            this.sep1.Name = "sep1";
+            this.sep1.Size = new System.Drawing.Size(1, 456);
+            this.sep1.TabIndex = 2;
+            this.sep1.TabStop = false;
+            // 
+            // fileDialog
+            // 
+            this.fileDialog.Filter = "PDF Files (*.pdf)|*.pdf";
+            // 
+            // cropBoxPanel
+            // 
+            this.cropBoxPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cropBoxPanel.BackColor = System.Drawing.SystemColors.ScrollBar;
+            this.cropBoxPanel.Location = new System.Drawing.Point(51, 0);
+            this.cropBoxPanel.Name = "cropBoxPanel";
+            this.cropBoxPanel.Size = new System.Drawing.Size(875, 456);
+            this.cropBoxPanel.TabIndex = 3;
             // 
             // MainFrm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(773, 380);
+            this.ClientSize = new System.Drawing.Size(926, 456);
             this.Controls.Add(this.mainPanel);
             this.Name = "MainFrm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -237,12 +239,12 @@ namespace windows_ui
         private Splitter sep1;
         private PictureBox mainCropBox;
         private OpenFileDialog fileDialog;
-        private Panel panel2;
         private ToolStripButton RegexEditor;
         private ToolStripButton mainCropBtn;
         private ContextMenuStrip cropContext;
         private ToolStripMenuItem cropSettingsToolStripMenuItem;
         private ToolStripMenuItem cropColourToolStripMenuItem;
         private ToolStripMenuItem cropWidthToolStripMenuItem;
+        private Panel cropBoxPanel;
     }
 }

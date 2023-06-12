@@ -98,6 +98,7 @@ namespace windows_ui
         PDF openPDF = null;
 
         (int, int) currentCropBoxSize;
+        (int left, int right, int top, int bottom) cropBoxPadding = (63, 12, 12, 12);
 
         public MainFrm()
         {
@@ -123,8 +124,8 @@ namespace windows_ui
             {
                 openPDF.getPage(
                         0,
-                        this.mainPanel.Width - 342,
-                        this.mainPanel.Height - 24,
+                        this.mainPanel.Width - (cropBoxPadding.left + cropBoxPadding.right),
+                        this.mainPanel.Height - (cropBoxPadding.top + cropBoxPadding.bottom),
                         setNewImage
                 );
             }        
@@ -186,6 +187,11 @@ namespace windows_ui
         private void setNewImage(AnyBitmap page, int width, int height)
         {
             mainCropBox.Width = width; mainCropBox.Height = height;
+
+            mainCropBox.Location = new Point(
+                (cropBoxPanel.Width / 2 - mainCropBox.Width / 2) + cropBoxPanel.Location.X,
+                (cropBoxPanel.Height/2 - mainCropBox.Height/2)
+            );
             
             this.mainCropBox.Image = page;
             if ((mainCropBox.Width, mainCropBox.Height) == currentCropBoxSize)
